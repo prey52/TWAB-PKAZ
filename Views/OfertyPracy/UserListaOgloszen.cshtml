@@ -1,0 +1,72 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using TWAB.Areas.Identity.Data
+@using TWAB.Models
+
+@namespace TWAB.Areas.Identity
+@inject SignInManager<DBUser> SignInManager
+@inject UserManager<DBUser> UserManager
+
+@model IEnumerable<TWAB.Models.OfertyPracyUserViewModel>
+<link rel="stylesheet" href="~/css/ListaOgloszen.css" />
+
+<div class="jobForm">
+    <form asp-action="ListaOgloszen">
+        <input type="text" name="Tytul" id="Tytul" class="btn bg-lightgray jobFormPadding" placeholder="Znajdź pracę marzeń" />
+        <select name="Kategoria" id="Kategoria" class="btn bg-lightgray dropdown-toggle jobFormPadding">
+            <option>Kategoria</option>
+            @{
+                foreach (var item in Listy.Kategorie)
+                {
+                    <option>@item</option>
+                }
+            }
+        </select>
+        <select name="WymiarPracy" id="WymiarPracy" class="btn bg-lightgray dropdown-toggle jobFormPadding">
+            <option>Wymiar pracy</option>
+            @{
+                foreach (var item in Listy.WymiarPracy)
+                {
+                    <option>@item</option>
+                }
+            }
+        </select>
+        <select name="RodzajUmowy" id="RodzajUmowy" class="btn bg-lightgray dropdown-toggle jobFormPadding">
+            <option>Rodzaj umowy</option>
+            @{
+            foreach (var item in Listy.TypyUmowy)
+            {
+                <option>@item</option>
+            }
+        }
+        </select>
+        <input type="text" name="Miasto" id="Miasto" class="btn bg-lightgray jobFormPadding" placeholder="Miasto">
+        <button type="submit" class="btn btn-primary bg-pink jobFormPadding"><img src="~/svg/search.svg" /></button>
+    </form>
+</div>
+
+@foreach (var item in Model)
+{
+    string imgSrc = item.LogoFirmy != null ? $"data:image/png;base64,{item.LogoFirmy}" : "/path/to/default/image.png";
+
+    <div class="jobOffer">
+        <a asp-action="Ogloszenie" asp-route-id="@item.Id">
+            <div class="full-width right-aligned first">
+            <p>@Html.DisplayFor(modelItem => item.RodzajUmowy)</p>
+            <p>@Html.DisplayFor(modelItem => item.WymiarPracy)</p>
+            <p class="rFirst">@Html.DisplayFor(modelItem => item.DataWaznosci)</p>
+        </div>
+        <div class="side-by-side">
+            <img src="@imgSrc" />
+            <div class="stacked">
+                <h5>@Html.DisplayFor(modelItem => item.Tytuł)</h5>
+                <p>@Html.DisplayFor(modelItem => item.Wynagrodzenie)</p>
+                <p>@Html.DisplayFor(modelItem => item.NazwaFirmy)</p>
+            </div>
+        </div>
+        <div class="full-width right-aligned">
+                <p class="rFirst">@Html.DisplayFor(modelItem => item.Miasto)</p>
+                <p class="rFirst">@Html.DisplayFor(modelItem => item.Wojewodztwo)</p>
+        </div>
+        </a>
+    </div>
+}

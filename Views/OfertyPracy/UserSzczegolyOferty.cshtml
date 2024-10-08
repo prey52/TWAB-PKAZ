@@ -1,0 +1,76 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using TWAB.Areas.Identity.Data
+@using TWAB.Models
+
+@namespace TWAB.Areas.Identity
+@inject SignInManager<DBUser> SignInManager
+@inject UserManager<DBUser> UserManager
+
+@model SzczegolyOfertyViewModel
+@{
+    string imgSrc = Model.LogoFirmy != null ? $"data:image/png;base64,{Model.LogoFirmy}" : "/path/to/default/image.png";
+}
+<link rel="stylesheet" href="~/css/OgloszenieSzczegoly.css" />
+
+<div class="containter">
+    <div class="offerHeader">
+        <div class="headerLeft">
+            <img src="@imgSrc" class="logo" />
+            <h5>@Model.NazwaFirmy</h5>
+        </div>
+        <div class="headerRight">
+            <div class="expDate">
+                <p>Ważna do: @Model.DataWaznosci</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="offerTitle">
+        <h4>@Model.Tytul</h4>
+    </div>
+
+    <div class="main">
+        <div class="mainLeft">
+            <div class="border1">
+                <p>@Model.Opis</p>
+            </div>
+            <h5>Wymagania</h5>
+            <div class="border1">
+                @foreach (var item in Model.Wymagania)
+                {
+                    <p><img src="~/svg/reqArrow.svg"> @item</p>
+                }
+            </div>
+        </div>
+        
+        <div class="mainRight">
+            <table>
+                <tr>
+                    <td><img src="~/svg/Briefcase.svg"> @Model.Kategoria</td>
+                </tr>
+                <tr>
+                    <td><img src="~/svg/PieChart.svg"> @Model.Miasto</td>
+                </tr>
+                <tr>
+                    <td><img src="~/svg/CashCoin.svg"> @Model.Wynagrodzenie</td>
+                </tr>
+                <tr>
+                    <td><img src="~/svg/PieChart.svg"> @Model.WymiarPracy</td>
+                </tr>
+                <tr>
+                    <td><img src="~/svg/FileEarmarkText.svg"> @Model.RodzajUmowy</td>
+                </tr>
+                <tr>
+                    <td><img src="~/svg/Star.svg"> Benefity:</td>
+                </tr>
+                @foreach (var item in Model.Benefity)
+                {
+                    <tr>
+                        <td>@item</td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+

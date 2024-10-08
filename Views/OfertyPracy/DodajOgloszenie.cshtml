@@ -1,0 +1,123 @@
+﻿@model OfertyPracyDTO
+
+@using Microsoft.AspNetCore.Identity
+@using TWAB.Areas.Identity.Data
+@using TWAB.Models
+
+@namespace TWAB.Areas.Identity
+@inject SignInManager<DBUser> SignInManager
+@inject UserManager<DBUser> UserManager
+
+<form asp-action="Wyslij" id="jobOfferForm">
+    <input asp-for="IdRekrutera" type="hidden" value="@UserManager.GetUserId(User)" />
+
+    <p>Tytuł ogłoszenia</p>
+    <input asp-for="Tytul" type="text" placeholder="Tytuł ogłoszenia" required />
+
+    <p>Kategoria</p>
+    <select asp-for="Kategoria" required>
+        @{
+            foreach (var item in Listy.Kategorie)
+            {
+                <option>@item</option>
+            }
+        }
+    </select>
+
+    <p>Opis</p>
+    <input asp-for="Opis" type="text" placeholder="Opis" required />
+
+    <p>Data ważności</p>
+    <input asp-for="DataWaznosci" type="date" placeholder="7" required />
+
+    <p>Wynagrodzenie</p>
+    <input asp-for="Wynagrodzenie" type="text" placeholder="1000zł" required />
+
+    <p>Wymiar pracy</p>
+    <select asp-for="WymiarPracy" required>
+        @{
+            foreach (var item in Listy.WymiarPracy)
+            {
+                <option>@item</option>
+            }
+        }
+    </select>
+
+    <p>Rodzaj umowy</p>
+    <select asp-for="RodzajUmowy" required>
+        @{
+            foreach (var item in Listy.TypyUmowy)
+            {
+                <option>@item</option>
+            }
+        }
+    </select>
+
+    <p>Wymagania</p>
+    <div id="requirements">
+        <div>
+            <input type="text" name="Wymagania[0].Nazwa" placeholder="Wymaganie" required />
+            <button type="button" onclick="removeRequirement(this)">Usuń</button>
+        </div>
+    </div>
+    <button type="button" onclick="addRequirement()">Dodaj wymaganie</button>
+
+    <p>Benefity</p>
+    <div id="benefits">
+        <div>
+            <input type="text" name="Benefity[0].Nazwa" placeholder="Benefit 1" required />
+            <button type="button" onclick="removeBenefit(this)">Usuń</button>
+        </div>
+    </div>
+    <button type="button" onclick="addBenefit()">Dodaj benefit</button>
+
+    <input type="submit" value="wyślij" />
+</form>
+
+<script>
+    let benefitIndex = 1;
+    function addBenefit() {
+        const benefitsDiv = document.getElementById('benefits');
+        const newBenefitDiv = document.createElement('div');
+        newBenefitDiv.innerHTML = `
+                    <input type="text" name="Benefity[${benefitIndex}].Nazwa" placeholder="Benefit ${benefitIndex + 1}" required />
+                    <button type="button" onclick="removeBenefit(this)">Usuń</button>
+                `;
+        benefitsDiv.appendChild(newBenefitDiv);
+        benefitIndex++;
+    }
+
+    let requirementIndex = 1;
+    function addRequirement() {
+        const requirementsDiv = document.getElementById('requirements');
+        const newRequirementDiv = document.createElement('div');
+        newRequirementDiv.innerHTML = `
+                    <input type="text" name="Wymagania[${requirementIndex}].Nazwa" placeholder="Wymaganie ${requirementIndex + 1}" required />
+                    <button type="button" onclick="removeRequirement(this)">Usuń</button>
+                `;
+        requirementsDiv.appendChild(newRequirementDiv);
+        requirementIndex++;
+    }
+
+    function removeRequirement(button) {
+        button.parentElement.remove();
+        requirementIndex--;
+    }
+
+    function removeBenefit(button) {
+        button.parentElement.remove();
+        benefitIndex--;
+    }
+
+    document.getElementById('jobOfferForm').addEventListener('submit', function (event) {
+        const inputs = this.querySelectorAll('input[required], select[required]');
+        for (const input of inputs) {
+            if (!input.value) {
+                event.preventDefault();
+                alert('Proszę wypełnić wszystkie wymagane pola.');
+                input.focus();
+                break;
+            }
+        }
+    });
+</script>
