@@ -16,14 +16,12 @@ namespace TWAB.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly HttpClient _httpClient;
         private readonly UserManager<DBUser> _userManager;
         private readonly TWABIdentityContext _dbContext;
 
-        public HomeController(ILogger<HomeController> logger, HttpClient httpClient, UserManager<DBUser> userManager, TWABIdentityContext context)
+        public HomeController(ILogger<HomeController> logger, UserManager<DBUser> userManager, TWABIdentityContext context)
         {
             _logger = logger;
-            _httpClient = httpClient;
             _userManager = userManager;
             _dbContext = context;
         }
@@ -33,7 +31,7 @@ namespace TWAB.Controllers
             return View();
         }
 
-        public async Task<IActionResult> DodajOgloszenie()
+        /*public async Task<IActionResult> DodajOgloszenie()
         {
             var recruiter = await _userManager.GetUserAsync(User);
             var localizationFilled = _dbContext.LokalizacjeFirm.FirstOrDefault(x => x.DbuserID == recruiter.Id);
@@ -188,6 +186,6 @@ namespace TWAB.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        }*/
     }
 }

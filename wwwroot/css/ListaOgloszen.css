@@ -1,0 +1,97 @@
+﻿a {
+    text-decoration: none;
+}
+
+.jobForm {
+    background-color: white;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    /*padding: 20px 0px 20px 0px;*/
+    padding: 2% 0% 2% 0%;
+}
+
+.jobFormPadding {
+    margin-left: 2.5%;
+}
+
+.jobFormPadding {
+    display: inline-block;
+}
+
+.bg-lightgray {
+    background-color: #F0F0F0;
+}
+
+.bg-pink {
+    border: none;
+    background: linear-gradient(180deg, #9059A1 0%, #CAB0D2 100%);
+}
+
+.jobPosition {
+    text-align: center;
+    height: 70%;
+    width: 20%;
+}
+
+.jobOffer {
+    background-color: white;
+    border-radius: 15px;
+    margin-top: 20px;
+    height: 160px;
+}
+
+.full-width {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+full-width p {
+    margin-left: 10px;
+}
+
+.side-by-side {
+    display: flex;
+    align-items: center;
+}
+
+.side-by-side img {
+    width: 80px;
+    height: auto;
+    margin-left: 30px;
+}
+
+.stacked {
+    display: flex;
+    flex-direction: column;
+    color: gray;
+    margin-left: 3%;
+}
+
+.stacked p {
+    margin-bottom: 5px;
+}
+
+.stacked h5 {
+    color: rgb(169,127,182);
+}
+
+.right-aligned {
+    display: flex;
+    justify-content: flex-end;
+    color: gray;
+}
+
+.right-aligned > :not(.rFirst) {
+    margin-right: 50px;
+    text-decoration: none;
+}
+
+.rFirst {
+    margin-right: 20px;
+}
+
+.first {
+    padding-top: 5px;
+}

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
+using TWAB.Database;
 
 namespace TWAB.Models
 {
@@ -9,7 +10,7 @@ namespace TWAB.Models
         public int Id { get; set; }
         public string IdRekrutera { get; set; }
         public string Status { get; set; }
-        public string Tytuł { get; set; }
+        public string Tytul { get; set; }
         public string Kategoria { get; set; }
         public string Opis { get; set; }
         public DateTime DataStworzenia { get; set; }

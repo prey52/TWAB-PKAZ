@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TWAB.Areas.Identity;
-using TWAB.Areas.Identity.Data;
 using TWAB.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,9 +14,6 @@ builder.Services.AddDefaultIdentity<DBUser>(options =>
     options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<TWABIdentityContext>();
-
-//http clinet
-builder.Services.AddHttpClient();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -42,7 +38,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     //pattern: "{controller=Home}/{action=ListaOgloszen}/{id?}");
-    pattern: "{controller=Home}/{action=Admin}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 //do obs³ugi widoków m.in. Identity
 app.UseEndpoints(endpoints =>
@@ -90,3 +86,5 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+//zmiana: logout

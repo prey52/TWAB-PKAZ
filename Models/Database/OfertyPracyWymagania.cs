@@ -1,9 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using TWAB.Models;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
-namespace TWAB.Models
+namespace TWAB.Database
 {
     public class OfertyPracyWymagania
     {
+        [Key]
         public int Id { get; set; }
         public string Opis { get; set; }
 

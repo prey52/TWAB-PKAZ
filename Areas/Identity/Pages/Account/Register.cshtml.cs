@@ -23,17 +23,17 @@ namespace TWAB.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly IUserStore<IdentityUser> _userStore;
-        private readonly IUserEmailStore<IdentityUser> _emailStore;
+        private readonly SignInManager<DBUser> _signInManager;
+        private readonly UserManager<DBUser> _userManager;
+        private readonly IUserStore<DBUser> _userStore;
+        private readonly IUserEmailStore<DBUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
-            UserManager<IdentityUser> userManager,
-            IUserStore<IdentityUser> userStore,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<DBUser> userManager,
+            IUserStore<DBUser> userStore,
+            SignInManager<DBUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
@@ -70,35 +70,52 @@ namespace TWAB.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
+            // Istniejące pola...
+            [Required]
+            [StringLength(20, ErrorMessage = "Przekroczono maksymalną ilość znaków")]
+            [Display(Name = "Imię")]
+            public string FirstName { get; set; }
+
+            [Required]
+            [StringLength(20, ErrorMessage = "Przekroczono maksymalną ilość znaków")]
+            [Display(Name = "Nazwisko")]
+            public string LastName { get; set; }
+
+            [Required]
+            [DataType(DataType.Date)]
+            [Display(Name = "Data urodzenia")]
+            public DateTime BirthDate { get; set; }
+
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
+            [Required]
+            [StringLength(9, ErrorMessage = "Numer telefonu składa się z 9 znaków.", MinimumLength = 9)]
+            [Display(Name = "Numer telefonu")]
+            public string PhoneNumber { get; set; }
+
+            [Display(Name = "Rola")]
+            public string Role { get; set; }
+
+            [Display(Name = "Nazwa firmy")]
+            public string CompanyName { get; set; }
+
+            [Display(Name = "Logo firmy")]
+            public IFormFile CompanyLogo { get; set; }
+
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "Hasło")]
             public string Password { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Display(Name = "Powtórz hasło")]
+            [Compare("Password", ErrorMessage = "Hasła różnią się od siebie.")]
             public string ConfirmPassword { get; set; }
         }
-
 
         public async Task OnGetAsync(string returnUrl = null)
         {
@@ -113,6 +130,30 @@ namespace TWAB.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
+
+                user.FirstName = Input.FirstName;
+                user.LastName = Input.LastName;
+                user.BirthDate = Input.BirthDate;
+                user.PhoneNumber = Input.PhoneNumber;
+                user.BirthDate = Input.BirthDate;
+                //na wypadek gdyby użytkownik zmienił typ na "rekruter", uzupełnił wartości i przełączył z powrotem na "użytkownik"
+                if (Input.Role == "Recruiter")
+                {
+                    await _userManager.AddToRoleAsync(user, "Recruiter");
+                    user.CompanyName = Input.CompanyName;
+                    if (Input.CompanyLogo != null && Input.CompanyLogo.Length > 0)
+                    {
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            await Input.CompanyLogo.CopyToAsync(memoryStream);
+                            user.CompanyLogo = memoryStream.ToArray();
+                        }
+                    }
+                }
+                else
+                {
+                    await _userManager.AddToRoleAsync(user, "User");
+                }
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -154,27 +195,27 @@ namespace TWAB.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private IdentityUser CreateUser()
+        private DBUser CreateUser()
         {
             try
             {
-                return Activator.CreateInstance<IdentityUser>();
+                return Activator.CreateInstance<DBUser>();
             }
             catch
             {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(IdentityUser)}'. " +
-                    $"Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
+                throw new InvalidOperationException($"Can't create an instance of '{nameof(DBUser)}'. " +
+                    $"Ensure that '{nameof(DBUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
                     $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
             }
         }
 
-        private IUserEmailStore<IdentityUser> GetEmailStore()
+        private IUserEmailStore<DBUser> GetEmailStore()
         {
             if (!_userManager.SupportsUserEmail)
             {
                 throw new NotSupportedException("The default UI requires a user store with email support.");
             }
-            return (IUserEmailStore<IdentityUser>)_userStore;
+            return (IUserEmailStore<DBUser>)_userStore;
         }
     }
 }
