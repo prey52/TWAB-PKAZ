@@ -10,6 +10,8 @@ using System;
 using System.Diagnostics;
 using System.Reflection;
 using TWAB.Data;
+using Microsoft.EntityFrameworkCore;
+using TWAB.Database;
 
 namespace TWAB.Controllers
 {
@@ -31,7 +33,7 @@ namespace TWAB.Controllers
             return View();
         }
 
-        /*public async Task<IActionResult> DodajOgloszenie()
+        public async Task<IActionResult> DodajOgloszenie()
         {
             var recruiter = await _userManager.GetUserAsync(User);
             var localizationFilled = _dbContext.LokalizacjeFirm.FirstOrDefault(x => x.DbuserID == recruiter.Id);
@@ -47,23 +49,51 @@ namespace TWAB.Controllers
 
         }
 
-        public async Task<IActionResult> Wyslij(OfertyPracyDTO jobOfferDto)
+       public async Task<IActionResult> Wyslij(OfertyPracyDTO jobOfferDto)
         {
-            var url = "https://localhost:7029/api/OfertyPracy";
-
             jobOfferDto.Status = "Oczekuj¹ca";
             jobOfferDto.DataStworzenia = DateTime.Now;
             jobOfferDto.DataPublikacji = DateTime.Now; //do zmiany
 
-            await _httpClient.PostAsJsonAsync(url, jobOfferDto);
+            var jobOffer = new OfertyPracyModel
+            {
+                IdRekrutera = jobOfferDto.IdRekrutera,
+                Status = jobOfferDto.Status,
+                Tytul = jobOfferDto.Tytul,
+                Kategoria = jobOfferDto.Kategoria,
+                Opis = jobOfferDto.Opis,
+                DataStworzenia = jobOfferDto.DataStworzenia,
+                DataPublikacji = jobOfferDto.DataPublikacji,
+                DataWaznosci = jobOfferDto.DataWaznosci,
+                Wynagrodzenie = jobOfferDto.Wynagrodzenie,
+                WymiarPracy = jobOfferDto.WymiarPracy,
+                RodzajUmowy = jobOfferDto.RodzajUmowy,
+                Benefity = jobOfferDto.Benefity.Select(b => new OfertyPracyBenefity { Opis = b.Nazwa }).ToList(),
+                Wymagania = jobOfferDto.Wymagania.Select(r => new OfertyPracyWymagania { Opis = r.Nazwa }).ToList()
+            };
+
+            //Identity sam ogarnie zapis do odpowiednich tabel <3
+            _dbContext.OfertyPracy.Add(jobOffer);
+            await _dbContext.SaveChangesAsync();
 
             return RedirectToAction("ListaOgloszen");
         }
 
+        
         public async Task<IActionResult> ListaOgloszen(FiltrDTO filtr)
         {
-            var url = "https://localhost:7029/api/OfertyPracy";
-            var jobOffers = await _httpClient.GetFromJsonAsync<List<ListaOfertDTO>>(url);
+            var jobOffers = await _dbContext.OfertyPracy.Select(x => new ListaOfertDTO
+            {
+                Id = x.Id,
+                IdRektutera = x.IdRekrutera,
+                Tytul = x.Tytul,
+                Kategoria = x.Kategoria,
+                Status = x.Status,
+                DataWaznosci = x.DataWaznosci,
+                Wynagrodzenie = x.Wynagrodzenie,
+                WymiarPracy = x.WymiarPracy,
+                RodzajUmowy = x.RodzajUmowy
+            }).ToListAsync();
 
             List<OfertyPracyUserViewModel> result = new List<OfertyPracyUserViewModel>();
 
@@ -145,36 +175,50 @@ namespace TWAB.Controllers
 
             return View("/Views/OfertyPracy/UserListaOgloszen.cshtml", result);
         }
-
+        
         public async Task<IActionResult> Ogloszenie(int id)
         {
-            var url = $"https://localhost:7029/api/OfertyPracy/{id}";
-            SzczegolyOfertyDTO oferta = await _httpClient.GetFromJsonAsync<SzczegolyOfertyDTO>(url);
-            var user = await _userManager.FindByIdAsync(oferta.IdRekrutera);
+            var result1 = await _dbContext.OfertyPracy.FindAsync(id);
+            var result2 = await _dbContext.Benefity.Where(x => x.OfertaPracyId == result1.Id).ToListAsync();
+            var result3 = await _dbContext.Wymagania.Where(x => x.OfertaPracyId == result1.Id).ToListAsync();
+
+            List<string> benefity = new List<string>();
+            foreach (var item in result2)
+            {
+                benefity.Add(item.Opis);
+            }
+
+            List<string> wymagania = new List<string>();
+            foreach (var item in result3)
+            {
+                wymagania.Add(item.Opis);
+            }
+
+            var user = await _userManager.FindByIdAsync(result1.IdRekrutera);
             var lokalizacja = _dbContext.LokalizacjeFirm.FirstOrDefault(x => x.DbuserID == user.Id);
 
             SzczegolyOfertyViewModel result = new SzczegolyOfertyViewModel()
             {
-                Id = oferta.Id,
-                IdRekrutera = oferta.IdRekrutera,
-                Tytul = oferta.Tytul,
-                Opis = oferta.Opis,
-                Kategoria = oferta.Kategoria,
-                DataWaznosci = oferta.DataWaznosci.ToShortDateString(),
-                Wynagrodzenie = oferta.Wynagrodzenie,
-                WymiarPracy = oferta.WymiarPracy,
-                RodzajUmowy = oferta.RodzajUmowy,
+                Id = result1.Id,
+                IdRekrutera = user.Id,
+                Tytul = result1.Tytul,
+                Opis = result1.Opis,
+                Kategoria = result1.Kategoria,
+                DataWaznosci = result1.DataWaznosci.ToShortDateString(),
+                Wynagrodzenie = result1.Wynagrodzenie,
+                WymiarPracy = result1.WymiarPracy,
+                RodzajUmowy = result1.RodzajUmowy,
                 LogoFirmy = Convert.ToBase64String(user.CompanyLogo),
                 NazwaFirmy = user.CompanyName,
                 Wojewodztwo = lokalizacja.Wojewodztwo,
                 Miasto = lokalizacja.Miasto,
             };
-            foreach (var item in oferta.Wymagania)
+            foreach (var item in wymagania)
             {
                 result.Wymagania.Add(item);
             }
 
-            foreach (var item in oferta.Benefity)
+            foreach (var item in benefity)
             {
                 result.Benefity.Add(item);
             }
@@ -186,6 +230,6 @@ namespace TWAB.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }*/
+        }
     }
 }

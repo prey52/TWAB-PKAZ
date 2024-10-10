@@ -37,8 +37,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    //pattern: "{controller=Home}/{action=ListaOgloszen}/{id?}");
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=ListaOgloszen}/{id?}");
 
 //do obs³ugi widoków m.in. Identity
 app.UseEndpoints(endpoints =>
@@ -86,5 +85,3 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
-
-//zmiana: logout
