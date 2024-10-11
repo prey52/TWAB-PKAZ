@@ -56,17 +56,17 @@ public class LokalizacjaModel : PageModel
         }
 
         var recruiter = await _userManager.GetUserAsync(User);
-        var localizationFilled = _dbContext.LokalizacjeFirm.FirstOrDefault(x => x.DbuserID == recruiter.Id);
+        var localizationFilled = _dbContext.ComanyLocations.FirstOrDefault(x => x.DbuserID == recruiter.Id);
 
         if (localizationFilled != null)
         {
             Input = new InputModel
             {
-                Województwo = localizationFilled.Wojewodztwo,
-                Miasto = localizationFilled.Miasto,
-                Ulica = localizationFilled.Ulica,
-                NrLokalu = localizationFilled.NrLokalu,
-                KodPocztowy = localizationFilled.KodPocztowy
+                Województwo = localizationFilled.Province,
+                Miasto = localizationFilled.City,
+                Ulica = localizationFilled.Street,
+                NrLokalu = localizationFilled.Number,
+                KodPocztowy = localizationFilled.ZipCode
             };
         }
         
@@ -115,22 +115,22 @@ public class LokalizacjaModel : PageModel
             }
 
             var recruiter = await _userManager.GetUserAsync(User);
-            var localizationFilled = _dbContext.LokalizacjeFirm.FirstOrDefault(x => x.DbuserID == recruiter.Id);
+            var localizationFilled = _dbContext.ComanyLocations.FirstOrDefault(x => x.DbuserID == recruiter.Id);
 
             if (localizationFilled == null)
             {
-                localizationFilled = new LokalizacjaFirmy
+                localizationFilled = new ComanyLocation
                 {
                     DbuserID = recruiter.Id
                 };
-                _dbContext.LokalizacjeFirm.Add(localizationFilled);
+                _dbContext.ComanyLocations.Add(localizationFilled);
             }
 
-            localizationFilled.Wojewodztwo = Input.Województwo;
-            localizationFilled.Miasto = Input.Miasto;
-            localizationFilled.Ulica = Input.Ulica;
-            localizationFilled.NrLokalu = Input.NrLokalu;
-            localizationFilled.KodPocztowy = Input.KodPocztowy;
+            localizationFilled.Province = Input.Województwo;
+            localizationFilled.City = Input.Miasto;
+            localizationFilled.Street = Input.Ulica;
+            localizationFilled.Number = Input.NrLokalu;
+            localizationFilled.ZipCode = Input.KodPocztowy;
 
             await _dbContext.SaveChangesAsync();
 

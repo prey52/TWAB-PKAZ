@@ -6,16 +6,16 @@
 @inject SignInManager<DBUser> SignInManager
 @inject UserManager<DBUser> UserManager
 
-@model IEnumerable<TWAB.Models.OfertyPracyUserViewModel>
-<link rel="stylesheet" href="~/css/ListaOgloszen.css" />
+@model IEnumerable<TWAB.Models.JobOffersUserViewModel>
+<link rel="stylesheet" href="~/css/AdvertisementsList.css" />
 
 <div class="jobForm">
-    <form asp-action="ListaOgloszen">
+    <form asp-action="AdvertisementsList">
         <input type="text" name="Tytul" id="Tytul" class="btn bg-lightgray jobFormPadding" placeholder="Znajdź pracę marzeń" />
         <select name="Kategoria" id="Kategoria" class="btn bg-lightgray dropdown-toggle jobFormPadding">
             <option>Kategoria</option>
             @{
-                foreach (var item in Listy.Kategorie)
+                foreach (var item in Lists.Categories)
                 {
                     <option>@item</option>
                 }
@@ -24,7 +24,7 @@
         <select name="WymiarPracy" id="WymiarPracy" class="btn bg-lightgray dropdown-toggle jobFormPadding">
             <option>Wymiar pracy</option>
             @{
-                foreach (var item in Listy.WymiarPracy)
+                foreach (var item in Lists.WrokDimension)
                 {
                     <option>@item</option>
                 }
@@ -33,7 +33,7 @@
         <select name="RodzajUmowy" id="RodzajUmowy" class="btn bg-lightgray dropdown-toggle jobFormPadding">
             <option>Rodzaj umowy</option>
             @{
-            foreach (var item in Listy.TypyUmowy)
+            foreach (var item in Lists.ContractType)
             {
                 <option>@item</option>
             }
@@ -46,26 +46,26 @@
 
 @foreach (var item in Model)
 {
-    string imgSrc = item.LogoFirmy != null ? $"data:image/png;base64,{item.LogoFirmy}" : "/path/to/default/image.png";
+    string imgSrc = item.CompanyLogo != null ? $"data:image/png;base64,{item.CompanyLogo}" : "/path/to/default/image.png";
 
     <div class="jobOffer">
-        <a asp-action="Ogloszenie" asp-route-id="@item.Id">
+        <a asp-action="Advertisement" asp-route-id="@item.Id">
             <div class="full-width right-aligned first">
-            <p>@Html.DisplayFor(modelItem => item.RodzajUmowy)</p>
-            <p>@Html.DisplayFor(modelItem => item.WymiarPracy)</p>
-            <p class="rFirst">@Html.DisplayFor(modelItem => item.DataWaznosci)</p>
+            <p>@Html.DisplayFor(modelItem => item.ContractType)</p>
+            <p>@Html.DisplayFor(modelItem => item.WorkDimension)</p>
+            <p class="rFirst">@Html.DisplayFor(modelItem => item.ExpirationDate)</p>
         </div>
         <div class="side-by-side">
             <img src="@imgSrc" />
             <div class="stacked">
-                <h5>@Html.DisplayFor(modelItem => item.Tytuł)</h5>
-                <p>@Html.DisplayFor(modelItem => item.Wynagrodzenie)</p>
-                <p>@Html.DisplayFor(modelItem => item.NazwaFirmy)</p>
+                <h5>@Html.DisplayFor(modelItem => item.Title)</h5>
+                <p>@Html.DisplayFor(modelItem => item.Salary)</p>
+                <p>@Html.DisplayFor(modelItem => item.CompanyName)</p>
             </div>
         </div>
         <div class="full-width right-aligned">
-                <p class="rFirst">@Html.DisplayFor(modelItem => item.Miasto)</p>
-                <p class="rFirst">@Html.DisplayFor(modelItem => item.Wojewodztwo)</p>
+                <p class="rFirst">@Html.DisplayFor(modelItem => item.City)</p>
+                <p class="rFirst">@Html.DisplayFor(modelItem => item.Province)</p>
         </div>
         </a>
     </div>

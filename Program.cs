@@ -37,7 +37,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=ListaOgloszen}/{id?}");
+    pattern: "{controller=Home}/{action=AdvertisementsList}/{id?}");
 
 //do obs³ugi widoków m.in. Identity
 app.UseEndpoints(endpoints =>

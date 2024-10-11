@@ -1,8 +1,8 @@
 ﻿namespace TWAB.Models
 {
-    public static class Listy
+    public static class Lists
     {
-        public static List<string> TypyUmowy = new List<string>
+        public static List<string> ContractType = new List<string>
         {
             "Umowa o pracę",
             "Umowa zlecenie",
@@ -13,14 +13,14 @@
             "Umowa staż/praktyki"
         };
 
-        public static List<string> WymiarPracy = new List<string>
+        public static List<string> WrokDimension = new List<string>
         {
             "Pełen etat",
             "3/4 etatu",
             "1/2 etatu"
         };
 
-        public static List<string> Kategorie = new List<string>
+        public static List<string> Categories = new List<string>
         {
             "Informatyka",
             "Medycyna",
@@ -44,7 +44,7 @@
             "Inne"
         };
 
-        public static List<string> Statusy = new List<string>
+        public static List<string> Statuses = new List<string>
         {
             "Oczekująca",
             "Odrzucona",
@@ -52,7 +52,7 @@
             "Wygasła"
         };
 
-        public static List<string> Wojewodztwa = new List<string>
+        public static List<string> Province = new List<string>
         {
             "Dolnośląskie",
             "Kujawsko-pomorskie",

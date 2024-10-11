@@ -17,6 +17,6 @@ public class DBUser : IdentityUser
     //opcjonalne; wykorzystywane dla rektuterów.
     public string? CompanyName {  get; set; }
     public byte[]? CompanyLogo {  get; set; }
-    public LokalizacjaFirmy CompanyLocalization { get; set; }
+    public ComanyLocation CompanyLocalization { get; set; }
 
 }

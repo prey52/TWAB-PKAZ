@@ -6,37 +6,37 @@
 @inject SignInManager<DBUser> SignInManager
 @inject UserManager<DBUser> UserManager
 
-@model SzczegolyOfertyViewModel
+@model OfferDetailsViewModel
 @{
-    string imgSrc = Model.LogoFirmy != null ? $"data:image/png;base64,{Model.LogoFirmy}" : "/path/to/default/image.png";
+    string imgSrc = Model.CompanyLogo != null ? $"data:image/png;base64,{Model.CompanyLogo}" : "/path/to/default/image.png";
 }
-<link rel="stylesheet" href="~/css/OgloszenieSzczegoly.css" />
+<link rel="stylesheet" href="~/css/AdvertisementDetails.css" />
 
 <div class="containter">
     <div class="offerHeader">
         <div class="headerLeft">
             <img src="@imgSrc" class="logo" />
-            <h5>@Model.NazwaFirmy</h5>
+            <h5>@Model.CompanyName</h5>
         </div>
         <div class="headerRight">
             <div class="expDate">
-                <p>Ważna do: @Model.DataWaznosci</p>
+                <p>Ważna do: @Model.ExpirationDate</p>
             </div>
         </div>
     </div>
 
     <div class="offerTitle">
-        <h4>@Model.Tytul</h4>
+        <h4>@Model.Title</h4>
     </div>
 
     <div class="main">
         <div class="mainLeft">
             <div class="border1">
-                <p>@Model.Opis</p>
+                <p>@Model.Description</p>
             </div>
             <h5>Wymagania</h5>
             <div class="border1">
-                @foreach (var item in Model.Wymagania)
+                @foreach (var item in Model.Requirements)
                 {
                     <p><img src="~/svg/reqArrow.svg"> @item</p>
                 }
@@ -46,24 +46,24 @@
         <div class="mainRight">
             <table>
                 <tr>
-                    <td><img src="~/svg/Briefcase.svg"> @Model.Kategoria</td>
+                    <td><img src="~/svg/Briefcase.svg"> @Model.Category</td>
                 </tr>
                 <tr>
-                    <td><img src="~/svg/PieChart.svg"> @Model.Miasto</td>
+                    <td><img src="~/svg/PieChart.svg"> @Model.City</td>
                 </tr>
                 <tr>
-                    <td><img src="~/svg/CashCoin.svg"> @Model.Wynagrodzenie</td>
+                    <td><img src="~/svg/CashCoin.svg"> @Model.Salary</td>
                 </tr>
                 <tr>
-                    <td><img src="~/svg/PieChart.svg"> @Model.WymiarPracy</td>
+                    <td><img src="~/svg/PieChart.svg"> @Model.WorkDimension</td>
                 </tr>
                 <tr>
-                    <td><img src="~/svg/FileEarmarkText.svg"> @Model.RodzajUmowy</td>
+                    <td><img src="~/svg/FileEarmarkText.svg"> @Model.ContractType</td>
                 </tr>
                 <tr>
                     <td><img src="~/svg/Star.svg"> Benefity:</td>
                 </tr>
-                @foreach (var item in Model.Benefity)
+                @foreach (var item in Model.Benefits)
                 {
                     <tr>
                         <td>@item</td>

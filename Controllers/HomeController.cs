@@ -33,10 +33,10 @@ namespace TWAB.Controllers
             return View();
         }
 
-        public async Task<IActionResult> DodajOgloszenie()
+        public async Task<IActionResult> AddAdvertisement()
         {
             var recruiter = await _userManager.GetUserAsync(User);
-            var localizationFilled = _dbContext.LokalizacjeFirm.FirstOrDefault(x => x.DbuserID == recruiter.Id);
+            var localizationFilled = _dbContext.ComanyLocations.FirstOrDefault(x => x.DbuserID == recruiter.Id);
 
             if (localizationFilled == null)
             {
@@ -44,63 +44,63 @@ namespace TWAB.Controllers
             }
             else
             {
-                return View("/Views/OfertyPracy/DodajOgloszenie.cshtml");
+                return View("/Views/OfertyPracy/AddAdvertisement.cshtml");
             }
 
         }
 
-       public async Task<IActionResult> Wyslij(OfertyPracyDTO jobOfferDto)
+       public async Task<IActionResult> Send(JobOfferDTO jobOfferDto)
         {
             jobOfferDto.Status = "Oczekuj¹ca";
-            jobOfferDto.DataStworzenia = DateTime.Now;
-            jobOfferDto.DataPublikacji = DateTime.Now; //do zmiany
+            jobOfferDto.CreateDate = DateTime.Now;
+            jobOfferDto.PublicationDate = DateTime.Now; //do zmiany
 
-            var jobOffer = new OfertyPracyModel
+            var jobOffer = new JobOfferModel
             {
-                IdRekrutera = jobOfferDto.IdRekrutera,
+                RecruiterId = jobOfferDto.RecruiterId,
                 Status = jobOfferDto.Status,
-                Tytul = jobOfferDto.Tytul,
-                Kategoria = jobOfferDto.Kategoria,
-                Opis = jobOfferDto.Opis,
-                DataStworzenia = jobOfferDto.DataStworzenia,
-                DataPublikacji = jobOfferDto.DataPublikacji,
-                DataWaznosci = jobOfferDto.DataWaznosci,
-                Wynagrodzenie = jobOfferDto.Wynagrodzenie,
-                WymiarPracy = jobOfferDto.WymiarPracy,
-                RodzajUmowy = jobOfferDto.RodzajUmowy,
-                Benefity = jobOfferDto.Benefity.Select(b => new OfertyPracyBenefity { Opis = b.Nazwa }).ToList(),
-                Wymagania = jobOfferDto.Wymagania.Select(r => new OfertyPracyWymagania { Opis = r.Nazwa }).ToList()
+                Title = jobOfferDto.Title,
+                Category = jobOfferDto.Category,
+                Description = jobOfferDto.Description,
+                CreateDate = jobOfferDto.CreateDate,
+                PublicationDate = jobOfferDto.PublicationDate,
+                ExpirationDate = jobOfferDto.ExpirationDate,
+                Salary = jobOfferDto.Salary,
+                WorkDimension = jobOfferDto.WorkDimension,
+                ContractType = jobOfferDto.ContractType,
+                Benefits = jobOfferDto.Benefits.Select(b => new JobOfferBenefits { Description = b.Name }).ToList(),
+                Requirements = jobOfferDto.Requirements.Select(r => new JobOfferRequirements { Description = r.Name }).ToList()
             };
 
             //Identity sam ogarnie zapis do odpowiednich tabel <3
-            _dbContext.OfertyPracy.Add(jobOffer);
+            _dbContext.JobOffers.Add(jobOffer);
             await _dbContext.SaveChangesAsync();
 
-            return RedirectToAction("ListaOgloszen");
+            return RedirectToAction("AdvertisementsList");
         }
 
         
-        public async Task<IActionResult> ListaOgloszen(FiltrDTO filtr)
+        public async Task<IActionResult> AdvertisementsList(FilterDTO filtr)
         {
-            var jobOffers = await _dbContext.OfertyPracy.Select(x => new ListaOfertDTO
+            var jobOffers = await _dbContext.JobOffers.Select(x => new OffersList
             {
                 Id = x.Id,
-                IdRektutera = x.IdRekrutera,
-                Tytul = x.Tytul,
-                Kategoria = x.Kategoria,
+                RecruiterId = x.RecruiterId,
+                Title = x.Title,
+                Category = x.Category,
                 Status = x.Status,
-                DataWaznosci = x.DataWaznosci,
-                Wynagrodzenie = x.Wynagrodzenie,
-                WymiarPracy = x.WymiarPracy,
-                RodzajUmowy = x.RodzajUmowy
+                ExpirationDate = x.ExpirationDate,
+                Salary = x.Salary,
+                WorkDimension = x.WorkDimension,
+                ContractType = x.ContractType
             }).ToListAsync();
 
-            List<OfertyPracyUserViewModel> result = new List<OfertyPracyUserViewModel>();
+            List<JobOffersUserViewModel> result = new List<JobOffersUserViewModel>();
 
             bool isFiltrFilled = false;
-            if (filtr.Kategoria == "Kategoria") filtr.Kategoria = null;
-            if (filtr.WymiarPracy == "Wymiar pracy") filtr.WymiarPracy = null;
-            if (filtr.RodzajUmowy == "Rodzaj umowy") filtr.RodzajUmowy = null;
+            if (filtr.Category == "Kategoria") filtr.Category = null;
+            if (filtr.WorkingDimension == "Wymiar pracy") filtr.WorkingDimension = null;
+            if (filtr.ContractType == "Rodzaj umowy") filtr.ContractType = null;
 
             PropertyInfo[] properties = filtr.GetType().GetProperties();
             foreach (PropertyInfo property in properties)
@@ -117,24 +117,24 @@ namespace TWAB.Controllers
             {
                 foreach (var item in jobOffers)
                 {
-                    var user = await _userManager.FindByIdAsync(item.IdRektutera);
+                    var user = await _userManager.FindByIdAsync(item.RecruiterId);
 
-                    var lokalizacja = _dbContext.LokalizacjeFirm.FirstOrDefault(x => x.DbuserID == user.Id);
+                    var lokalizacja = _dbContext.ComanyLocations.FirstOrDefault(x => x.DbuserID == user.Id);
 
-                    OfertyPracyUserViewModel tmp = new OfertyPracyUserViewModel()
+                    JobOffersUserViewModel tmp = new JobOffersUserViewModel()
                     {
                         Id = item.Id,
                         Status = item.Status,
-                        Tytu³ = item.Tytul,
-                        Kategoria = item.Kategoria,
-                        DataWaznosci = item.DataWaznosci.ToShortDateString(),
-                        Wynagrodzenie = item.Wynagrodzenie,
-                        WymiarPracy = item.WymiarPracy,
-                        RodzajUmowy = item.RodzajUmowy,
-                        NazwaFirmy = user.CompanyName,
-                        LogoFirmy = Convert.ToBase64String(user.CompanyLogo),
-                        Wojewodztwo = lokalizacja.Wojewodztwo,
-                        Miasto = lokalizacja.Miasto
+                        Title = item.Title,
+                        Category = item.Category,
+                        ExpirationDate = item.ExpirationDate.ToShortDateString(),
+                        Salary = item.Salary,
+                        WorkDimension = item.WorkDimension,
+                        ContractType = item.ContractType,
+                        CompanyName = user.CompanyName,
+                        CompanyLogo = Convert.ToBase64String(user.CompanyLogo),
+                        Province = lokalizacja.Province,
+                        City = lokalizacja.City
                     };
                     result.Add(tmp);
                 }
@@ -143,29 +143,29 @@ namespace TWAB.Controllers
             {
                 foreach (var item in jobOffers)
                 {
-                    var user = await _userManager.FindByIdAsync(item.IdRektutera);
-                    var lokalizacja = _dbContext.LokalizacjeFirm.FirstOrDefault(x => x.DbuserID == user.Id);
+                    var user = await _userManager.FindByIdAsync(item.RecruiterId);
+                    var lokalizacja = _dbContext.ComanyLocations.FirstOrDefault(x => x.DbuserID == user.Id);
 
-                    if ((filtr.Tytul == null || item.Tytul == filtr.Tytul) &&
-                    (filtr.Kategoria == null || item.Kategoria == filtr.Kategoria) &&
-                    (filtr.WymiarPracy == null || item.WymiarPracy == filtr.WymiarPracy) &&
-                    (filtr.RodzajUmowy == null || item.RodzajUmowy == filtr.RodzajUmowy) &&
-                    (filtr.Miasto == null || lokalizacja.Miasto == filtr.Miasto))
+                    if ((filtr.Title == null || item.Title == filtr.Title) &&
+                    (filtr.Category == null || item.Category == filtr.Category) &&
+                    (filtr.WorkingDimension == null || item.WorkDimension == filtr.WorkingDimension) &&
+                    (filtr.ContractType == null || item.ContractType == filtr.ContractType) &&
+                    (filtr.City == null || lokalizacja.City == filtr.City))
                     {
-                        OfertyPracyUserViewModel tmp = new OfertyPracyUserViewModel()
+                        JobOffersUserViewModel tmp = new JobOffersUserViewModel()
                         {
                             Id = item.Id,
                             Status = item.Status,
-                            Tytu³ = item.Tytul,
-                            Kategoria = item.Kategoria,
-                            DataWaznosci = item.DataWaznosci.ToShortDateString(),
-                            Wynagrodzenie = item.Wynagrodzenie,
-                            WymiarPracy = item.WymiarPracy,
-                            RodzajUmowy = item.RodzajUmowy,
-                            NazwaFirmy = user.CompanyName,
-                            LogoFirmy = Convert.ToBase64String(user.CompanyLogo),
-                            Wojewodztwo = lokalizacja.Wojewodztwo,
-                            Miasto = lokalizacja.Miasto
+                            Title = item.Title,
+                            Category = item.Category,
+                            ExpirationDate = item.ExpirationDate.ToShortDateString(),
+                            Salary = item.Salary,
+                            WorkDimension = item.WorkDimension,
+                            ContractType = item.ContractType,
+                            CompanyName = user.CompanyName,
+                            CompanyLogo = Convert.ToBase64String(user.CompanyLogo),
+                            Province = lokalizacja.Province,
+                            City = lokalizacja.City
                         };
                         result.Add(tmp);
                     }
@@ -173,57 +173,57 @@ namespace TWAB.Controllers
             }
 
 
-            return View("/Views/OfertyPracy/UserListaOgloszen.cshtml", result);
+            return View("/Views/OfertyPracy/UserAdvertisementsList.cshtml", result);
         }
-        
-        public async Task<IActionResult> Ogloszenie(int id)
+
+        public async Task<IActionResult> Advertisement(int id)
         {
-            var result1 = await _dbContext.OfertyPracy.FindAsync(id);
-            var result2 = await _dbContext.Benefity.Where(x => x.OfertaPracyId == result1.Id).ToListAsync();
-            var result3 = await _dbContext.Wymagania.Where(x => x.OfertaPracyId == result1.Id).ToListAsync();
+            var result1 = await _dbContext.JobOffers.FindAsync(id);
+            var result2 = await _dbContext.Benefits.Where(x => x.JobOfferId == result1.Id).ToListAsync();
+            var result3 = await _dbContext.Requirements.Where(x => x.JobOfferId == result1.Id).ToListAsync();
 
             List<string> benefity = new List<string>();
             foreach (var item in result2)
             {
-                benefity.Add(item.Opis);
+                benefity.Add(item.Description);
             }
 
             List<string> wymagania = new List<string>();
             foreach (var item in result3)
             {
-                wymagania.Add(item.Opis);
+                wymagania.Add(item.Description);
             }
 
-            var user = await _userManager.FindByIdAsync(result1.IdRekrutera);
-            var lokalizacja = _dbContext.LokalizacjeFirm.FirstOrDefault(x => x.DbuserID == user.Id);
+            var user = await _userManager.FindByIdAsync(result1.RecruiterId);
+            var lokalizacja = _dbContext.ComanyLocations.FirstOrDefault(x => x.DbuserID == user.Id);
 
-            SzczegolyOfertyViewModel result = new SzczegolyOfertyViewModel()
+            OfferDetailsViewModel result = new OfferDetailsViewModel()
             {
                 Id = result1.Id,
-                IdRekrutera = user.Id,
-                Tytul = result1.Tytul,
-                Opis = result1.Opis,
-                Kategoria = result1.Kategoria,
-                DataWaznosci = result1.DataWaznosci.ToShortDateString(),
-                Wynagrodzenie = result1.Wynagrodzenie,
-                WymiarPracy = result1.WymiarPracy,
-                RodzajUmowy = result1.RodzajUmowy,
-                LogoFirmy = Convert.ToBase64String(user.CompanyLogo),
-                NazwaFirmy = user.CompanyName,
-                Wojewodztwo = lokalizacja.Wojewodztwo,
-                Miasto = lokalizacja.Miasto,
+                RecruiterId = user.Id,
+                Title = result1.Title,
+                Description = result1.Description,
+                Category = result1.Category,
+                ExpirationDate = result1.ExpirationDate.ToShortDateString(),
+                Salary = result1.Salary,
+                WorkDimension = result1.WorkDimension,
+                ContractType = result1.ContractType,
+                CompanyLogo = Convert.ToBase64String(user.CompanyLogo),
+                CompanyName = user.CompanyName,
+                Province = lokalizacja.Province,
+                City = lokalizacja.City,
             };
             foreach (var item in wymagania)
             {
-                result.Wymagania.Add(item);
+                result.Requirements.Add(item);
             }
 
             foreach (var item in benefity)
             {
-                result.Benefity.Add(item);
+                result.Benefits.Add(item);
             }
 
-            return View("/Views/OfertyPracy/UserSzczegolyOferty.cshtml", result);
+            return View("/Views/OfertyPracy/UserAdvertisementDetails.cshtml", result);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

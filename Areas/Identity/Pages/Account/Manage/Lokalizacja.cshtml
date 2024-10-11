@@ -15,7 +15,7 @@
             <div class="form-floating mb-3">
                 <select asp-for="Input.Województwo" class="form-control" aria-required="true">
                     
-                    @foreach(var wojewodztwo in Listy.Wojewodztwa)
+                    @foreach(var wojewodztwo in Lists.Province)
                     {
                         <option>@wojewodztwo</option>
                     }

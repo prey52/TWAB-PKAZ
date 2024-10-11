@@ -12,7 +12,7 @@ using TWAB.Data;
 namespace TWAB.Migrations
 {
     [DbContext(typeof(TWABIdentityContext))]
-    [Migration("20241010002353_initial")]
+    [Migration("20241011010825_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -236,7 +236,7 @@ namespace TWAB.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("TWAB.Areas.Identity.Data.LokalizacjaFirmy", b =>
+            modelBuilder.Entity("TWAB.Areas.Identity.Data.ComanyLocation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -244,27 +244,27 @@ namespace TWAB.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("DbuserID")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("KodPocztowy")
+                    b.Property<string>("Number")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Miasto")
+                    b.Property<string>("Province")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NrLokalu")
+                    b.Property<string>("Street")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Ulica")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Wojewodztwo")
+                    b.Property<string>("ZipCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -273,10 +273,10 @@ namespace TWAB.Migrations
                     b.HasIndex("DbuserID")
                         .IsUnique();
 
-                    b.ToTable("LokalizacjeFirm");
+                    b.ToTable("ComanyLocations");
                 });
 
-            modelBuilder.Entity("TWAB.Database.OfertyPracyBenefity", b =>
+            modelBuilder.Entity("TWAB.Database.JobOfferBenefits", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -284,21 +284,21 @@ namespace TWAB.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("OfertaPracyId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Opis")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("JobOfferId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OfertaPracyId");
+                    b.HasIndex("JobOfferId");
 
-                    b.ToTable("Benefity");
+                    b.ToTable("Benefits");
                 });
 
-            modelBuilder.Entity("TWAB.Database.OfertyPracyWymagania", b =>
+            modelBuilder.Entity("TWAB.Database.JobOfferRequirements", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -306,21 +306,21 @@ namespace TWAB.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("OfertaPracyId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Opis")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("JobOfferId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OfertaPracyId");
+                    b.HasIndex("JobOfferId");
 
-                    b.ToTable("Wymagania");
+                    b.ToTable("Requirements");
                 });
 
-            modelBuilder.Entity("TWAB.Models.OfertyPracyModel", b =>
+            modelBuilder.Entity("TWAB.Models.JobOfferModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -328,28 +328,32 @@ namespace TWAB.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DataPublikacji")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DataStworzenia")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DataWaznosci")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("IdRekrutera")
+                    b.Property<string>("Category")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Kategoria")
+                    b.Property<string>("ContractType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Opis")
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RodzajUmowy")
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("PublicationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("RecruiterId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Salary")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -357,21 +361,17 @@ namespace TWAB.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Tytul")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("WymiarPracy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Wynagrodzenie")
+                    b.Property<string>("WorkDimension")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("OfertyPracy");
+                    b.ToTable("JobOffers");
                 });
 
             modelBuilder.Entity("TWAB.Areas.Identity.DBUser", b =>
@@ -452,44 +452,44 @@ namespace TWAB.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TWAB.Areas.Identity.Data.LokalizacjaFirmy", b =>
+            modelBuilder.Entity("TWAB.Areas.Identity.Data.ComanyLocation", b =>
                 {
                     b.HasOne("TWAB.Areas.Identity.DBUser", "Dbuser")
                         .WithOne("CompanyLocalization")
-                        .HasForeignKey("TWAB.Areas.Identity.Data.LokalizacjaFirmy", "DbuserID")
+                        .HasForeignKey("TWAB.Areas.Identity.Data.ComanyLocation", "DbuserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Dbuser");
                 });
 
-            modelBuilder.Entity("TWAB.Database.OfertyPracyBenefity", b =>
+            modelBuilder.Entity("TWAB.Database.JobOfferBenefits", b =>
                 {
-                    b.HasOne("TWAB.Models.OfertyPracyModel", "OfertaPracy")
-                        .WithMany("Benefity")
-                        .HasForeignKey("OfertaPracyId")
+                    b.HasOne("TWAB.Models.JobOfferModel", "JobOffer")
+                        .WithMany("Benefits")
+                        .HasForeignKey("JobOfferId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("OfertaPracy");
+                    b.Navigation("JobOffer");
                 });
 
-            modelBuilder.Entity("TWAB.Database.OfertyPracyWymagania", b =>
+            modelBuilder.Entity("TWAB.Database.JobOfferRequirements", b =>
                 {
-                    b.HasOne("TWAB.Models.OfertyPracyModel", "OfertaPracy")
-                        .WithMany("Wymagania")
-                        .HasForeignKey("OfertaPracyId")
+                    b.HasOne("TWAB.Models.JobOfferModel", "JobOffer")
+                        .WithMany("Requirements")
+                        .HasForeignKey("JobOfferId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("OfertaPracy");
+                    b.Navigation("JobOffer");
                 });
 
-            modelBuilder.Entity("TWAB.Models.OfertyPracyModel", b =>
+            modelBuilder.Entity("TWAB.Models.JobOfferModel", b =>
                 {
-                    b.Navigation("Benefity");
+                    b.Navigation("Benefits");
 
-                    b.Navigation("Wymagania");
+                    b.Navigation("Requirements");
                 });
 
             modelBuilder.Entity("TWAB.Areas.Identity.DBUser", b =>

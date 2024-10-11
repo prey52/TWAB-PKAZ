@@ -57,26 +57,26 @@ namespace TWAB.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OfertyPracy",
+                name: "JobOffers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    IdRekrutera = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RecruiterId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Tytul = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Kategoria = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Opis = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DataStworzenia = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DataPublikacji = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DataWaznosci = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Wynagrodzenie = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    WymiarPracy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RodzajUmowy = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Category = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PublicationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Salary = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    WorkDimension = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ContractType = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OfertyPracy", x => x.Id);
+                    table.PrimaryKey("PK_JobOffers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -186,23 +186,23 @@ namespace TWAB.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "LokalizacjeFirm",
+                name: "ComanyLocations",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Wojewodztwo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Miasto = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Ulica = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NrLokalu = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    KodPocztowy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Province = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Street = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Number = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ZipCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DbuserID = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LokalizacjeFirm", x => x.Id);
+                    table.PrimaryKey("PK_ComanyLocations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_LokalizacjeFirm_AspNetUsers_DbuserID",
+                        name: "FK_ComanyLocations_AspNetUsers_DbuserID",
                         column: x => x.DbuserID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -210,41 +210,41 @@ namespace TWAB.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Benefity",
+                name: "Benefits",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Opis = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OfertaPracyId = table.Column<int>(type: "int", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    JobOfferId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Benefity", x => x.Id);
+                    table.PrimaryKey("PK_Benefits", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Benefity_OfertyPracy_OfertaPracyId",
-                        column: x => x.OfertaPracyId,
-                        principalTable: "OfertyPracy",
+                        name: "FK_Benefits_JobOffers_JobOfferId",
+                        column: x => x.JobOfferId,
+                        principalTable: "JobOffers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Wymagania",
+                name: "Requirements",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Opis = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OfertaPracyId = table.Column<int>(type: "int", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    JobOfferId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Wymagania", x => x.Id);
+                    table.PrimaryKey("PK_Requirements", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Wymagania_OfertyPracy_OfertaPracyId",
-                        column: x => x.OfertaPracyId,
-                        principalTable: "OfertyPracy",
+                        name: "FK_Requirements_JobOffers_JobOfferId",
+                        column: x => x.JobOfferId,
+                        principalTable: "JobOffers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -289,20 +289,20 @@ namespace TWAB.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Benefity_OfertaPracyId",
-                table: "Benefity",
-                column: "OfertaPracyId");
+                name: "IX_Benefits_JobOfferId",
+                table: "Benefits",
+                column: "JobOfferId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LokalizacjeFirm_DbuserID",
-                table: "LokalizacjeFirm",
+                name: "IX_ComanyLocations_DbuserID",
+                table: "ComanyLocations",
                 column: "DbuserID",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Wymagania_OfertaPracyId",
-                table: "Wymagania",
-                column: "OfertaPracyId");
+                name: "IX_Requirements_JobOfferId",
+                table: "Requirements",
+                column: "JobOfferId");
         }
 
         /// <inheritdoc />
@@ -324,13 +324,13 @@ namespace TWAB.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Benefity");
+                name: "Benefits");
 
             migrationBuilder.DropTable(
-                name: "LokalizacjeFirm");
+                name: "ComanyLocations");
 
             migrationBuilder.DropTable(
-                name: "Wymagania");
+                name: "Requirements");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -339,7 +339,7 @@ namespace TWAB.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "OfertyPracy");
+                name: "JobOffers");
         }
     }
 }

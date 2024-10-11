@@ -19,10 +19,10 @@ public class TWABIdentityContext : IdentityDbContext<IdentityUser>
     }
 
     public DbSet<DBUser> dBUsers { get; set; }
-    public DbSet<LokalizacjaFirmy> LokalizacjeFirm { get; set; }
-    public DbSet<OfertyPracyModel> OfertyPracy { get; set; }
-    public DbSet<OfertyPracyBenefity> Benefity { get; set; }
-    public DbSet<OfertyPracyWymagania> Wymagania { get; set; }
+    public DbSet<ComanyLocation> ComanyLocations { get; set; }
+    public DbSet<JobOfferModel> JobOffers { get; set; }
+    public DbSet<JobOfferBenefits> Benefits { get; set; }
+    public DbSet<JobOfferRequirements> Requirements { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -31,19 +31,19 @@ public class TWABIdentityContext : IdentityDbContext<IdentityUser>
         modelBuilder.Entity<DBUser>()
             .HasOne(x => x.CompanyLocalization)
             .WithOne(y => y.Dbuser)
-            .HasForeignKey<LokalizacjaFirmy>(l => l.DbuserID);
+            .HasForeignKey<ComanyLocation>(l => l.DbuserID);
 
         //jeden do wielu z benefitami
-        modelBuilder.Entity<OfertyPracyModel>()
-            .HasMany(j => j.Benefity)
-            .WithOne(b => b.OfertaPracy)
-            .HasForeignKey(b => b.OfertaPracyId);
+        modelBuilder.Entity<JobOfferModel>()
+            .HasMany(j => j.Benefits)
+            .WithOne(b => b.JobOffer)
+            .HasForeignKey(b => b.JobOfferId);
 
         //jeden do wielu z wymaganiami
-        modelBuilder.Entity<OfertyPracyModel>()
-            .HasMany(j => j.Wymagania)
-            .WithOne(b => b.OfertaPracy)
-            .HasForeignKey(b => b.OfertaPracyId);
+        modelBuilder.Entity<JobOfferModel>()
+            .HasMany(j => j.Requirements)
+            .WithOne(b => b.JobOffer)
+            .HasForeignKey(b => b.JobOfferId);
 
         modelBuilder.ApplyConfiguration(new AppUserEntityConfiguration());
     }

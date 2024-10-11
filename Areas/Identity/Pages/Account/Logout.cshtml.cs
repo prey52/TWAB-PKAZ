@@ -30,13 +30,13 @@ namespace TWAB.Areas.Identity.Pages.Account
             _logger.LogInformation("User logged out.");
             if (returnUrl != null)
             {
-                return RedirectToAction("ListaOgloszen", "Home");
+                return RedirectToAction("AdvertisementsList", "Home");
             }
             else
             {
                 // This needs to be a redirect so that the browser performs a new
                 // request and the identity for the user gets updated.
-                return RedirectToAction("ListaOgloszen", "Home");
+                return RedirectToAction("AdvertisementsList", "Home");
             }
         }
     }

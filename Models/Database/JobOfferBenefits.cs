@@ -4,14 +4,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TWAB.Database
 {
-    public class OfertyPracyWymagania
+    public class JobOfferBenefits
     {
         [Key]
         public int Id { get; set; }
-        public string Opis { get; set; }
+        public string Description { get; set; }
 
         // Klucz obcy do ofert
-        public int OfertaPracyId { get; set; }
-        public OfertyPracyModel OfertaPracy { get; set; }
+        public int JobOfferId { get; set; }
+        public JobOfferModel JobOffer { get; set; }
     }
 }

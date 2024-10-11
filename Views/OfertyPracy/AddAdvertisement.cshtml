@@ -1,4 +1,4 @@
-﻿@model OfertyPracyDTO
+﻿@model JobOfferDTO
 
 @using Microsoft.AspNetCore.Identity
 @using TWAB.Areas.Identity.Data
@@ -8,16 +8,16 @@
 @inject SignInManager<DBUser> SignInManager
 @inject UserManager<DBUser> UserManager
 
-<form asp-action="Wyslij" id="jobOfferForm">
-    <input asp-for="IdRekrutera" type="hidden" value="@UserManager.GetUserId(User)" />
+<form asp-action="Send" id="jobOfferForm">
+    <input asp-for="RecruiterId" type="hidden" value="@UserManager.GetUserId(User)" />
 
     <p>Tytuł ogłoszenia</p>
-    <input asp-for="Tytul" type="text" placeholder="Tytuł ogłoszenia" required />
+    <input asp-for="Title" type="text" placeholder="Tytuł ogłoszenia" required />
 
     <p>Kategoria</p>
-    <select asp-for="Kategoria" required>
+    <select asp-for="Category" required>
         @{
-            foreach (var item in Listy.Kategorie)
+            foreach (var item in Lists.Categories)
             {
                 <option>@item</option>
             }
@@ -25,18 +25,18 @@
     </select>
 
     <p>Opis</p>
-    <input asp-for="Opis" type="text" placeholder="Opis" required />
+    <input asp-for="Description" type="text" placeholder="Opis" required />
 
     <p>Data ważności</p>
-    <input asp-for="DataWaznosci" type="date" placeholder="7" required />
+    <input asp-for="ExpirationDate" type="date" placeholder="7" required />
 
     <p>Wynagrodzenie</p>
-    <input asp-for="Wynagrodzenie" type="text" placeholder="1000zł" required />
+    <input asp-for="Salary" type="text" placeholder="1000zł" required />
 
     <p>Wymiar pracy</p>
-    <select asp-for="WymiarPracy" required>
+    <select asp-for="WorkDimension" required>
         @{
-            foreach (var item in Listy.WymiarPracy)
+            foreach (var item in Lists.WrokDimension)
             {
                 <option>@item</option>
             }
@@ -44,9 +44,9 @@
     </select>
 
     <p>Rodzaj umowy</p>
-    <select asp-for="RodzajUmowy" required>
+    <select asp-for="ContractType" required>
         @{
-            foreach (var item in Listy.TypyUmowy)
+            foreach (var item in Lists.ContractType)
             {
                 <option>@item</option>
             }
@@ -56,7 +56,7 @@
     <p>Wymagania</p>
     <div id="requirements">
         <div>
-            <input type="text" name="Wymagania[0].Nazwa" placeholder="Wymaganie" required />
+            <input type="text" name="Requirements[0].Name" placeholder="Wymaganie" required />
             <button type="button" onclick="removeRequirement(this)">Usuń</button>
         </div>
     </div>
@@ -65,7 +65,7 @@
     <p>Benefity</p>
     <div id="benefits">
         <div>
-            <input type="text" name="Benefity[0].Nazwa" placeholder="Benefit 1" required />
+            <input type="text" name="Benefits[0].Name" placeholder="Benefit 1" required />
             <button type="button" onclick="removeBenefit(this)">Usuń</button>
         </div>
     </div>
@@ -80,7 +80,7 @@
         const benefitsDiv = document.getElementById('benefits');
         const newBenefitDiv = document.createElement('div');
         newBenefitDiv.innerHTML = `
-                    <input type="text" name="Benefity[${benefitIndex}].Nazwa" placeholder="Benefit ${benefitIndex + 1}" required />
+                    <input type="text" name="Benefits[${benefitIndex}].Name" placeholder="Benefit ${benefitIndex + 1}" required />
                     <button type="button" onclick="removeBenefit(this)">Usuń</button>
                 `;
         benefitsDiv.appendChild(newBenefitDiv);
@@ -92,7 +92,7 @@
         const requirementsDiv = document.getElementById('requirements');
         const newRequirementDiv = document.createElement('div');
         newRequirementDiv.innerHTML = `
-                    <input type="text" name="Wymagania[${requirementIndex}].Nazwa" placeholder="Wymaganie ${requirementIndex + 1}" required />
+                    <input type="text" name="Requirements[${requirementIndex}].Name" placeholder="Wymaganie ${requirementIndex + 1}" required />
                     <button type="button" onclick="removeRequirement(this)">Usuń</button>
                 `;
         requirementsDiv.appendChild(newRequirementDiv);
