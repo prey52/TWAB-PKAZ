@@ -96,6 +96,7 @@ namespace TWAB.Areas.Identity.Pages.Account
             [Display(Name = "Numer telefonu")]
             public string PhoneNumber { get; set; }
 
+            [Required]
             [Display(Name = "Rola")]
             public string Role { get; set; }
 
@@ -139,6 +140,10 @@ namespace TWAB.Areas.Identity.Pages.Account
                 //na wypadek gdyby użytkownik zmienił typ na "rekruter", uzupełnił wartości i przełączył z powrotem na "użytkownik"
                 if (Input.Role == "Recruiter")
                 {
+                    if (Input.CompanyName == null || Input.CompanyLogo == null)
+                    {
+                        return Page();
+                    }
                     await _userManager.AddToRoleAsync(user, "Recruiter");
                     user.CompanyName = Input.CompanyName;
                     if (Input.CompanyLogo != null && Input.CompanyLogo.Length > 0)
