@@ -111,6 +111,13 @@ namespace TWAB.Controllers
                     // Jeœli chocia¿ jedna w³aœciwoœæ nie jest pusta, zwróæ false
                     isFiltrFilled = true;
                 }
+                else
+                {
+                   
+                        // Wyprintuj nazwê w³aœciwoœci, która jest null
+                        Console.WriteLine($"W³aœciwoœæ '{property.Name}' ma wartoœæ null");
+                    
+                }
             }
 
             if (isFiltrFilled == false)
@@ -175,6 +182,7 @@ namespace TWAB.Controllers
 
             return View("/Views/OfertyPracy/UserAdvertisementsList.cshtml", result);
         }
+ 
 
         public async Task<IActionResult> Advertisement(int id)
         {

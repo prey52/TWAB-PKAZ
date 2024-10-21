@@ -1,0 +1,152 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using TWAB.Areas.Identity.Data
+@using TWAB.Models
+@namespace TWAB.Areas.Identity
+@inject SignInManager<DBUser> SignInManager
+@inject UserManager<DBUser> UserManager
+
+@model IEnumerable<TWAB.Models.RecruitmentHistoryViewModel>
+
+@{
+    ViewData["Title"] = "Aplikacje";
+}
+<link rel="stylesheet" href="~/css/Applications.css" />
+<div class="whiteBox">
+        <h3>Lista Aplikacji</h3>
+</div>
+@if (SignInManager.IsSignedIn(User))
+    {
+    var user = UserManager.GetUserAsync(User).Result; 
+    var roles = user != null ? UserManager.GetRolesAsync(user).Result : new List<string>();
+        @if (roles.Contains("User"))
+        {
+            <div >
+        <table class="table">
+                
+                    <thead >
+                    <tr class ="whiteBoxtable">
+                        <th class="rounded-left">
+                    <span class="display-name">@Html.DisplayName("Tytuł Oferty")</span>
+                        </th>
+                    <th>
+                            <span class="display-name">@Html.DisplayName("Kategoria")</span>
+                        </th>
+                    <th>
+                            <span class="display-name">@Html.DisplayName("Pensja")</span>
+                        </th>
+                    <th>
+                            <span class="display-name">@Html.DisplayName("Data aplikacji")</span>
+                    </th>
+                    <th>
+                            <span class="display-name"> CV File</span>
+                    </th>
+                        <th class ="rounded-right"></th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="extra"></tr>
+                        <tr class ="whiteBoxtable">
+                            <td class="rounded-left">
+                             
+                            <a asp-controller="Home" asp-action="Advertisement" asp-route-id="@item.JobOffer.Id">
+                                @Html.DisplayFor(modelItem => item.JobOffer.Title) 
+                            </a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.JobOffer.Category)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.JobOffer.Salary) 
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Recruitment.ApplicationData) 
+                        </td>
+                        <td>
+                            @if (item.Recruitment.CVfile != null && item.Recruitment.CVfile.Length > 0)
+                            {
+                                <a href="@Url.Action("Download", "Recruitment", new { id = item.Recruitment.Id })">Pobierz CV</a>
+                            }
+                            else
+                            {
+                                <span>Brak pliku</span>
+                            }
+                        </td>
+                        <td class="rounded-right">
+                            <a asp-action="Details" asp-route-id="@item.Recruitment.Id">Szczegóły</a>
+                           @*  <a asp-action="Delete" asp-route-id="@item.Recruitment.Id">Delete</a> *@
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        </div>
+        }
+    @if (roles.Contains("Recruiter"))
+    {
+        <div>
+            <table class="table">
+                <thead>
+                    <tr class="whiteBoxtable">
+                        <th class="rounded-left">
+                            <span class="display-name">@Html.DisplayName("Tytuł Oferty")</span>
+                        </th>
+                        <th>
+                            <span class="display-name">@Html.DisplayName("Imię i nazwisko")</span>
+                        </th>
+                        <th>
+                            <span class="display-name">@Html.DisplayName("Login")</span>
+                        </th>
+                        <th>
+                            <span class="display-name">@Html.DisplayName("Data aplikacji")</span>
+                        </th>
+                        <th>
+                            <span class="display-name">CV File</span>
+                        </th>
+                        <th class="rounded-right"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="extra"></tr>
+                        <tr class="whiteBoxtable">
+                            <td class="rounded-left">
+                                <a asp-controller="Home" asp-action="Advertisement" asp-route-id="@item.JobOffer.Id">
+                                    @Html.DisplayFor(modelItem => item.JobOffer.Title)
+                                </a>
+                            </td>
+                          
+                            <td>
+                                @Html.DisplayFor(modelItem => item.User.FirstName)
+                                @Html.DisplayFor(modelItem => item.User.LastName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.User.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Recruitment.ApplicationData)
+                            </td>
+                            <td>
+                                @if (item.Recruitment.CVfile != null && item.Recruitment.CVfile.Length > 0)
+                                {
+                                    <a href="@Url.Action("Download", "Recruitment", new { id = item.Recruitment.Id })">Pobierz CV</a>
+                                }
+                                else
+                                {
+                                    <span>Brak pliku</span>
+                                }
+                            </td>
+                            <td class="rounded-right">
+                                <a asp-action="Details" asp-route-id="@item.Recruitment.Id">Szczegóły</a>
+                                @* <a asp-action="Delete" asp-route-id="@item.Recruitment.Id">Delete</a> *@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    }

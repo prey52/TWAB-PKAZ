@@ -1,7 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using TWAB.Areas.Identity.Data
 @using TWAB.Models
-
 @namespace TWAB.Areas.Identity
 @inject SignInManager<DBUser> SignInManager
 @inject UserManager<DBUser> UserManager
@@ -72,5 +71,48 @@
             </table>
         </div>
     </div>
-</div>
+    @if (SignInManager.IsSignedIn(User))
+    {
+    var user = UserManager.GetUserAsync(User).Result; 
+    var roles = user != null ? UserManager.GetRolesAsync(user).Result : new List<string>();
+        @if (roles.Contains("User"))
+        {
+    @* Views/YourController/Index.cshtml *@
+    <div id="partialViewContainer">
+    </div>
 
+    <button id="loadPartialViewButton" data-id-ogloszenia="@Model.Id" data-id-usera="@user.Id">Aplikuj</button>
+
+        }
+    }
+    else
+    {
+        <p>Zaloguj się, aby aplikować</p>
+    }
+
+    
+
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#loadPartialViewButton').click(function () {
+            var idOgloszenia = $(this).data('id-ogloszenia');
+            var idUsera = $(this).data('id-usera');
+
+            $.ajax({
+                url: '@Url.Action("LoadCreateApplicationView", "Recruitment")',
+                type: 'GET',
+                data: { idOgloszenia: idOgloszenia, idUsera: idUsera },
+                success: function (result) {
+                    $('#partialViewContainer').html(result);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Status: " + status + ", Error: " + error);
+                    console.error("Response Text: " + xhr.responseText);
+                    alert('Error loading partial view');
+                }
+            });
+        });
+    });
+</script>

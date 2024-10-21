@@ -23,6 +23,7 @@ public class TWABIdentityContext : IdentityDbContext<IdentityUser>
     public DbSet<JobOfferModel> JobOffers { get; set; }
     public DbSet<JobOfferBenefits> Benefits { get; set; }
     public DbSet<JobOfferRequirements> Requirements { get; set; }
+    public DbSet<RecruitmentModel> Recruitment { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

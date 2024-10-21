@@ -46,7 +46,7 @@
 
 @foreach (var item in Model)
 {
-    string imgSrc = item.CompanyLogo != null ? $"data:image/png;base64,{item.CompanyLogo}" : "/path/to/default/image.png";
+    //string imgSrc = item.CompanyLogo != null ? $"data:image/png;base64,{item.CompanyLogo}" : "/path/to/default/image.png";
 
     <div class="jobOffer">
         <a asp-action="Advertisement" asp-route-id="@item.Id">
@@ -56,7 +56,9 @@
             <p class="rFirst">@Html.DisplayFor(modelItem => item.ExpirationDate)</p>
         </div>
         <div class="side-by-side">
-            <img src="@imgSrc" />
+            <!--
+                    <img src="imgSrc" />
+            -->
             <div class="stacked">
                 <h5>@Html.DisplayFor(modelItem => item.Title)</h5>
                 <p>@Html.DisplayFor(modelItem => item.Salary)</p>

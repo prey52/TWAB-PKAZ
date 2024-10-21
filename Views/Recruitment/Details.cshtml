@@ -1,0 +1,138 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using TWAB.Areas.Identity.Data
+@using TWAB.Models
+@namespace TWAB.Areas.Identity
+@inject SignInManager<DBUser> SignInManager
+@inject UserManager<DBUser> UserManager
+
+@model TWAB.Models.RecruitmentHistoryViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+<link rel="stylesheet" href="~/css/Applications.css" />
+<div class="whiteBox">
+    <h3>Szczegóły Aplikacji</h3>
+</div>
+@if (SignInManager.IsSignedIn(User))
+    {
+    var user = UserManager.GetUserAsync(User).Result; 
+    var roles = user != null ? UserManager.GetRolesAsync(user).Result : new List<string>();
+        @if (roles.Contains("User"))
+        {
+            <div class="whiteBox">
+                <dl class="row">
+                    <dt class="col-sm-2">
+                    <span class="display-name">@Html.DisplayName("Tytuł Oferty")</span>
+                    </dt>
+                    <dd class="col-sm-10">
+                    <a asp-controller="Home" asp-action="Advertisement" asp-route-id="model.JobOffer.Id">
+                        @Html.DisplayFor(model => model.JobOffer.Title)
+                    </a>
+                        
+                    </dd>
+                    <dt class="col-sm-2">
+                    <span class="display-name">@Html.DisplayName("Kategoria")</span>
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.JobOffer.Category)
+                    </dd>
+                    <dt class="col-sm-2">
+                    <span class="display-name">@Html.DisplayName("Pensja")</span>
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.JobOffer.Salary)
+                    </dd>
+                    <dt class="col-sm-2">
+                    <span class="display-name">@Html.DisplayName("Zawartość")</span>
+                    </dt>
+
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Recruitment.Content)
+                    </dd>
+                    <dt class="col-sm-2">
+                    <span class="display-name">@Html.DisplayName("Data aplikacji")</span>
+                    </dt>
+
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Recruitment.ApplicationData)
+                    </dd>
+                    <dt class="col-sm-2">
+                    <span class="display-name">@Html.DisplayName("Plik CV")</span>
+                    </dt>
+                    <dd class="col-sm-10">
+                        @if (Model.Recruitment.CVfile != null && Model.Recruitment.CVfile.Length > 0)
+                        {
+                            <a href="@Url.Action("Download", "Recruitment", new { id = Model.Recruitment.Id })">Pobierz CV</a>
+                        }
+                        else
+                        {
+                            <span>Brak pliku CV</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+        }
+        @if (roles.Contains("Recruiter"))
+        {
+        <div class="whiteBox">
+                <dl class="row">
+                    <dt class="col-sm-2">
+                    <span class="display-name"> @Html.DisplayName("Tytuł Oferty")</span>
+                    
+                    </dt>
+                    <dd class="col-sm-10">
+                    <a asp-controller="Home" asp-action="Advertisement" asp-route-id="model.JobOffer.Id">
+                        @Html.DisplayFor(model => model.JobOffer.Title)
+                    </a>
+                    </dd>
+
+                    <dt class="col-sm-2">
+                    <span class="display-name">@Html.DisplayName("Login")</span>
+
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.User.Email)
+                    </dd>
+                    <dt class="col-sm-2">
+                    <span class="display-name">@Html.DisplayName("Imię i nazwisko")</span>
+                    </dt>
+
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.User.FirstName)
+                        @Html.DisplayFor(model => model.User.LastName)
+                    </dd>
+                    <dt class="col-sm-2">
+                    <span class="display-name">@Html.DisplayName("Zawartość")</span>
+                    </dt>
+
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Recruitment.Content)
+                    </dd>
+                    <dt class="col-sm-2">
+                    <span class="display-name">@Html.DisplayName("Data aplikacji")</span>
+                    </dt>
+
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Recruitment.ApplicationData)
+                    </dd>
+                    <dt class="col-sm-2">
+                    <span class="display-name">@Html.DisplayName("Plik CV")</span>
+                    </dt>
+                    <dd class="col-sm-10">
+                        @if (Model.Recruitment.CVfile != null && Model.Recruitment.CVfile.Length > 0)
+                        {
+                            <a href="@Url.Action("Download", "Recruitment", new { id = Model.Recruitment.Id })">Pobierz CV</a>
+                        }
+                        else
+                        {
+                            <span>Brak pliku CV</span>
+                        }
+                    </dd>
+                </dl>
+           </div>
+        }
+    }
+
+<div>
+    <a asp-action="Index">Powrót</a>
+</div>

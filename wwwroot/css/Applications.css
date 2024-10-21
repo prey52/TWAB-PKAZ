@@ -1,0 +1,133 @@
+﻿a {
+    text-decoration: none;
+}
+
+.whiteBox {
+    background-color: white;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    /*padding: 20px 0px 20px 0px;*/
+    padding: 2% 2% 2% 2%;
+    margin-bottom: 2%;
+    justify-content: center;
+}
+.whiteBoxtable {
+    background-color: white;
+    width: 100%;
+    height:auto;
+    border-radius: 10px;
+    margin: 20px;
+    /*padding: 20px 0px 20px 0px;*/
+    padding: 2% 2% 2% 2%;
+    justify-content: center;
+    border-bottom: 1px solid #f0f0f0;
+}
+.rounded-left {
+    border-top-left-radius: 10px; /* Zaokrąglony lewy górny róg */
+    border-bottom-left-radius: 10px; /* Zaokrąglony lewy górny róg */
+}
+
+.rounded-right {
+    border-top-right-radius: 10px;  /* Zaokrąglony prawy górny róg */
+    border-bottom-right-radius: 10px;  /* Zaokrąglony prawy górny róg */
+}
+.table {
+    margin-top: 1%;
+    border-bottom: 1px solid #f0f0f0;
+}
+th {
+    border: none;
+}
+.extra {
+    background-color: #F0F0F0;
+    height: 10px;
+}
+
+.jobFormPadding {
+    margin-left: 2.5%;
+}
+a {
+    color: rgb(169,127,182);
+}
+.jobFormPadding {
+    display: inline-block;
+}
+
+.bg-lightgray {
+    background-color: #F0F0F0;
+}
+
+.bg-pink {
+    border: none;
+    background: linear-gradient(180deg, #9059A1 0%, #CAB0D2 100%);
+}
+
+.jobPosition {
+    text-align: center;
+    height: 70%;
+    width: 20%;
+}
+
+.jobOffer {
+    background-color: white;
+    border-radius: 15px;
+    margin-top: 20px;
+    height: 160px;
+}
+
+.full-width {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+full-width p {
+    margin-left: 10px;
+}
+
+.side-by-side {
+    display: flex;
+    align-items: center;
+}
+
+.side-by-side img {
+    width: 80px;
+    height: auto;
+    margin-left: 30px;
+}
+
+.stacked {
+    display: flex;
+    flex-direction: column;
+    color: gray;
+    margin-left: 3%;
+}
+
+.display-name {
+    color: rgb(169,127,182);
+}
+
+.whiteBox h3 {
+    color: rgb(169,127,182);
+    text-align: center;
+}
+
+.right-aligned {
+    display: flex;
+    justify-content: flex-end;
+    color: gray;
+}
+
+.right-aligned > :not(.rFirst) {
+    margin-right: 50px;
+    text-decoration: none;
+}
+
+.rFirst {
+    margin-right: 20px;
+}
+
+.first {
+    padding-top: 5px;
+}
