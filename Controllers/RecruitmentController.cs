@@ -24,6 +24,7 @@ namespace TWAB.Controllers
             _context = context;
             _userManager = userManager;
         }
+
         public async Task<bool> IsUserInUserRole(UserManager<DBUser> userManager, ClaimsPrincipal user)
         {
             var appUser = await userManager.GetUserAsync(user);
@@ -35,6 +36,7 @@ namespace TWAB.Controllers
 
             return false;
         }
+
         public async Task<bool> IsRecruiterInUserRole(UserManager<DBUser> userManager, ClaimsPrincipal user)
         {
             var appUser = await userManager.GetUserAsync(user);

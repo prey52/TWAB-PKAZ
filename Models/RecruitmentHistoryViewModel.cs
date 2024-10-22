@@ -11,4 +11,3 @@ namespace TWAB.Models
         public DBUser User { get; set; }
     }
 }
-

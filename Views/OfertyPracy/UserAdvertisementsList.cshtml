@@ -11,8 +11,8 @@
 
 <div class="jobForm">
     <form asp-action="AdvertisementsList">
-        <input type="text" name="Tytul" id="Tytul" class="btn bg-lightgray jobFormPadding" placeholder="Znajdź pracę marzeń" />
-        <select name="Kategoria" id="Kategoria" class="btn bg-lightgray dropdown-toggle jobFormPadding">
+        <input type="text" name="Title" id="Title" class="btn bg-lightgray jobFormPadding" placeholder="Znajdź pracę marzeń" />
+        <select name="Category" id="Category" class="btn bg-lightgray dropdown-toggle jobFormPadding">
             <option>Kategoria</option>
             @{
                 foreach (var item in Lists.Categories)
@@ -21,7 +21,7 @@
                 }
             }
         </select>
-        <select name="WymiarPracy" id="WymiarPracy" class="btn bg-lightgray dropdown-toggle jobFormPadding">
+        <select name="WorkingDimension" id="WorkingDimension" class="btn bg-lightgray dropdown-toggle jobFormPadding">
             <option>Wymiar pracy</option>
             @{
                 foreach (var item in Lists.WrokDimension)
@@ -30,7 +30,7 @@
                 }
             }
         </select>
-        <select name="RodzajUmowy" id="RodzajUmowy" class="btn bg-lightgray dropdown-toggle jobFormPadding">
+        <select name="ContractType" id="ContractType" class="btn bg-lightgray dropdown-toggle jobFormPadding">
             <option>Rodzaj umowy</option>
             @{
             foreach (var item in Lists.ContractType)
@@ -39,26 +39,26 @@
             }
         }
         </select>
-        <input type="text" name="Miasto" id="Miasto" class="btn bg-lightgray jobFormPadding" placeholder="Miasto">
+        <input type="text" name="City" id="City" class="btn bg-lightgray jobFormPadding" placeholder="Miasto">
         <button type="submit" class="btn btn-primary bg-pink jobFormPadding"><img src="~/svg/search.svg" /></button>
     </form>
 </div>
 
 @foreach (var item in Model)
 {
-    //string imgSrc = item.CompanyLogo != null ? $"data:image/png;base64,{item.CompanyLogo}" : "/path/to/default/image.png";
-
+    string imgSrc = item.CompanyLogo != null ? $"data:image/png;base64,{item.CompanyLogo}" : "/path/to/default/image.png";
     <div class="jobOffer">
-        <a asp-action="Advertisement" asp-route-id="@item.Id">
+        <form asp-action="Advertisement">
+        <input name="id" id="id" value="@item.Id" type="hidden"/>
+        <button class="bttn-form" type="submit">
             <div class="full-width right-aligned first">
+            <p>@Html.DisplayFor(modelItem => item.Category)</p>
             <p>@Html.DisplayFor(modelItem => item.ContractType)</p>
             <p>@Html.DisplayFor(modelItem => item.WorkDimension)</p>
             <p class="rFirst">@Html.DisplayFor(modelItem => item.ExpirationDate)</p>
         </div>
         <div class="side-by-side">
-            <!--
-                    <img src="imgSrc" />
-            -->
+            <img src="@imgSrc" />
             <div class="stacked">
                 <h5>@Html.DisplayFor(modelItem => item.Title)</h5>
                 <p>@Html.DisplayFor(modelItem => item.Salary)</p>
@@ -69,6 +69,7 @@
                 <p class="rFirst">@Html.DisplayFor(modelItem => item.City)</p>
                 <p class="rFirst">@Html.DisplayFor(modelItem => item.Province)</p>
         </div>
-        </a>
+        </button>
+        </form>
     </div>
 }

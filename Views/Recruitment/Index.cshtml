@@ -38,7 +38,7 @@
                             <span class="display-name">@Html.DisplayName("Data aplikacji")</span>
                     </th>
                     <th>
-                            <span class="display-name"> CV File</span>
+                            <span class="display-name">CV File</span>
                     </th>
                         <th class ="rounded-right"></th>
                 </tr>
@@ -50,10 +50,15 @@
                     <tr class="extra"></tr>
                         <tr class ="whiteBoxtable">
                             <td class="rounded-left">
-                             
-                            <a asp-controller="Home" asp-action="Advertisement" asp-route-id="@item.JobOffer.Id">
+                             <form asp-action="Advertisement">
+                                 <input type="hidden" value="@item.JobOffer.Title" />
+                                    <button type="submit" class="text-button" style="border: none; background: none; padding: 0; margin: 0;">
+                                        Wciśnij mnie
+                                    </button>
+                             </form>
+                            @* <a asp-controller="Home" asp-action="Advertisement" asp-route-id="@item.JobOffer.Id">
                                 @Html.DisplayFor(modelItem => item.JobOffer.Title) 
-                            </a>
+                            </a> *@
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.JobOffer.Category)

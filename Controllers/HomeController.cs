@@ -182,7 +182,6 @@ namespace TWAB.Controllers
 
             return View("/Views/OfertyPracy/UserAdvertisementsList.cshtml", result);
         }
- 
 
         public async Task<IActionResult> Advertisement(int id)
         {
