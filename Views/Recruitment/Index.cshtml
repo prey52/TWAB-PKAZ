@@ -20,7 +20,12 @@
     var roles = user != null ? UserManager.GetRolesAsync(user).Result : new List<string>();
         @if (roles.Contains("User"))
         {
-            <div >
+        @if (!Model.Any())
+        {
+            <div class="whiteBoxtable"><h4><a href="/">Aplikuj</a> aby zdobyć wymarzoną prace już dziś!</h4></div>
+        }
+        else{
+        <div >
         <table class="table">
                 
                     <thead >
@@ -50,15 +55,9 @@
                     <tr class="extra"></tr>
                         <tr class ="whiteBoxtable">
                             <td class="rounded-left">
-                             <form asp-action="Advertisement">
-                                 <input type="hidden" value="@item.JobOffer.Title" />
-                                    <button type="submit" class="text-button" style="border: none; background: none; padding: 0; margin: 0;">
-                                        Wciśnij mnie
-                                    </button>
-                             </form>
-                            @* <a asp-controller="Home" asp-action="Advertisement" asp-route-id="@item.JobOffer.Id">
+                            <a asp-controller="Home" asp-action="Advertisement" asp-route-id="@item.JobOffer.Id">
                                 @Html.DisplayFor(modelItem => item.JobOffer.Title) 
-                            </a> *@
+                            </a>
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.JobOffer.Category)
@@ -86,8 +85,10 @@
                     </tr>
                 }
             </tbody>
-        </table>
-        </div>
+            </table>
+            </div>
+        }
+        
         }
     @if (roles.Contains("Recruiter"))
     {

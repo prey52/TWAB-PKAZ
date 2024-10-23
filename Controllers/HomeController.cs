@@ -30,7 +30,7 @@ namespace TWAB.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction();
         }
 
         public async Task<IActionResult> AddAdvertisement()

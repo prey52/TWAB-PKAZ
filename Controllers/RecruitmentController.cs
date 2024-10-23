@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -50,6 +51,7 @@ namespace TWAB.Controllers
         }
 
         // GET: Recruitment
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var userId = _userManager.GetUserId(User);
@@ -72,6 +74,7 @@ namespace TWAB.Controllers
                 recruitmentHistoryOffers = recruitmentHistoryOffers
             .Where(v => v.User != null && v.User.Id == userId) 
             .ToList();
+
             }
             if (isRecruiter)
             {
@@ -83,19 +86,27 @@ namespace TWAB.Controllers
             return View(recruitmentHistoryOffers);
         }
 
-
+        [Authorize]
         public async Task<IActionResult> Download(int id)
         {
+
+            var userId = _userManager.GetUserId(User);
             var recruitmentModel = await _context.Recruitment.FindAsync(id);
-            if (recruitmentModel == null || recruitmentModel.CVfile == null || recruitmentModel.CVfile.Length == 0)
+            var offerId = recruitmentModel.OfferId;
+            var jobOffer = await _context.JobOffers.FindAsync(offerId);
+            var recruiterId = jobOffer.RecruiterId;
+
+            bool accessToOffer = (recruitmentModel.UserId == userId || recruiterId == userId);
+
+            if (recruitmentModel == null || recruitmentModel.CVfile == null || recruitmentModel.CVfile.Length == 0 || accessToOffer == false)
             {
                 return NotFound();
             }
 
-            string fileExtension = ".pdf"; 
-            string contentType = "application/pdf"; 
+            string fileExtension = ".pdf";
+            string contentType = "application/pdf";
 
-           
+
             if (recruitmentModel.FileType == ".pdf")
             {
                 fileExtension = ".pdf";
@@ -108,8 +119,8 @@ namespace TWAB.Controllers
             }
             else if (recruitmentModel.FileType == ".doc" || recruitmentModel.FileType == ".docx")
             {
-                fileExtension = ".docx"; 
-                contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"; 
+                fileExtension = ".docx";
+                contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
             }
             else
             {
@@ -118,10 +129,13 @@ namespace TWAB.Controllers
 
             string fileName = $"CV_{recruitmentModel.UserId}{fileExtension}";
             return File(recruitmentModel.CVfile, contentType, fileName);
+            
+          
         }
-
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
+
             if (id == null)
             {
                 return NotFound();
@@ -141,16 +155,31 @@ namespace TWAB.Controllers
             var user = await _context.dBUsers
                 .FirstOrDefaultAsync(u => u.Id == recruitmentModel.UserId);
 
-            var viewModel = new RecruitmentHistoryViewModel
-            {
-                Recruitment = recruitmentModel,
-                JobOffer = jobOffer,
-                User = user
-            };
+            // Zabezpieczenie
+            var recruiterId = jobOffer.RecruiterId;
+            var userId = _userManager.GetUserId(User);
 
-            return View(viewModel); // Zwrócenie pojedynczego obiektu do widoku
+            bool accessToOffer = (recruitmentModel.UserId == userId || recruiterId == userId);
+
+            if (accessToOffer == false)
+            {
+                return NotFound();
+            }
+            else
+            {
+
+                var viewModel = new RecruitmentHistoryViewModel
+                {
+                    Recruitment = recruitmentModel,
+                    JobOffer = jobOffer,
+                    User = user
+                };
+
+                return View(viewModel);
+            }
         }
         [HttpGet]
+        [Authorize]
         public ActionResult LoadCreateApplicationView(int idOgloszenia, string idUsera)
         {
             // Przekazujemy dane do modelu widoku
@@ -170,6 +199,7 @@ namespace TWAB.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(RecruitmentViewModel recruitmentViewModel)
         {

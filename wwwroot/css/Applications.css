@@ -1,5 +1,6 @@
 ﻿a {
     text-decoration: none;
+    color: rgb(169,127,182);
 }
 
 .whiteBox {
@@ -47,9 +48,7 @@ th {
 .jobFormPadding {
     margin-left: 2.5%;
 }
-a {
-    color: rgb(169,127,182);
-}
+
 .jobFormPadding {
     display: inline-block;
 }

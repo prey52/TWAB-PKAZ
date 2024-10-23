@@ -4,23 +4,25 @@
     border: none;
     border-radius: 15px;
 }
-
+a {
+    text-decoration: none;
+}
 .jobForm {
+    display: inline-flex;
+    justify-content: center;
     background-color: white;
+    align-content: stretch;
+    box-sizing: border-box;
     width: 100%;
-    height: auto;
+    margin: auto;
     border-radius: 10px;
-    /*padding: 20px 0px 20px 0px;*/
-    padding: 2% 0% 2% 0%;
+    padding: 20px; /* Padding wewnętrzny */
+    /*margin: 20px auto;*/ /* Centrowanie kontenera */
 }
 
-.jobFormPadding {
-    margin-left: 2.5%;
-}
-
-.jobFormPadding {
-    display: inline-block;
-}
+/*.jobFormPadding {
+    
+}*/
 
 .bg-lightgray {
     background-color: #F0F0F0;
@@ -29,6 +31,7 @@
 .bg-pink {
     border: none;
     background: linear-gradient(180deg, #9059A1 0%, #CAB0D2 100%);
+    
 }
 
 .jobPosition {

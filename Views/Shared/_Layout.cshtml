@@ -32,10 +32,13 @@
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AddAdvertisement">Dodaj ogłoszenie</a>
                                 </li>
                             }
+                            @if (SignInManager.IsSignedIn(User))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Recruitment" asp-action="Index">Lista aplikacji</a>
+                                </li>
+                            }
                         }
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Recruitment" asp-action="Index">Lista aplikacji</a>
-                        </li>
                     </ul>
                 </div>
                 <partial name="_LoginPartial" />

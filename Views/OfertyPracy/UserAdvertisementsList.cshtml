@@ -48,9 +48,8 @@
 {
     string imgSrc = item.CompanyLogo != null ? $"data:image/png;base64,{item.CompanyLogo}" : "/path/to/default/image.png";
     <div class="jobOffer">
-        <form asp-action="Advertisement">
-        <input name="id" id="id" value="@item.Id" type="hidden"/>
-        <button class="bttn-form" type="submit">
+        <a asp-action="Advertisement" asp-route-id="@item.Id">
+        
             <div class="full-width right-aligned first">
             <p>@Html.DisplayFor(modelItem => item.Category)</p>
             <p>@Html.DisplayFor(modelItem => item.ContractType)</p>
@@ -69,7 +68,6 @@
                 <p class="rFirst">@Html.DisplayFor(modelItem => item.City)</p>
                 <p class="rFirst">@Html.DisplayFor(modelItem => item.Province)</p>
         </div>
-        </button>
-        </form>
+        </a>
     </div>
 }

@@ -1,7 +1,10 @@
 ﻿h4, h5 {
     color: rgb(169,127,182);
 }
-
+a {
+    text-decoration: none;
+    color: rgb(169,127,182);
+}
 td {
     height: 40px;
 }
