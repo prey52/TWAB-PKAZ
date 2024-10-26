@@ -80,7 +80,7 @@ namespace TWAB.Controllers
         }
 
         
-        public async Task<IActionResult> AdvertisementsList(FilterDTO filtr)
+        public async Task<IActionResult> AdvertisementsList(FilterDTO filter)
         {
             var jobOffers = await _dbContext.JobOffers.Select(x => new OffersList
             {
@@ -97,30 +97,17 @@ namespace TWAB.Controllers
 
             List<JobOffersUserViewModel> result = new List<JobOffersUserViewModel>();
 
-            bool isFiltrFilled = false;
-            if (filtr.Category == "Kategoria") filtr.Category = null;
-            if (filtr.WorkingDimension == "Wymiar pracy") filtr.WorkingDimension = null;
-            if (filtr.ContractType == "Rodzaj umowy") filtr.ContractType = null;
+            bool isFilterFilled = false;
+            if (filter.Category == "Kategoria") filter.Category = null;
+            if (filter.WorkingDimension == "Wymiar pracy") filter.WorkingDimension = null;
+            if (filter.ContractType == "Rodzaj umowy") filter.ContractType = null;
 
-            PropertyInfo[] properties = filtr.GetType().GetProperties();
-            foreach (PropertyInfo property in properties)
+            if (filter.IsAnyPropertyFilled())
             {
-                // SprawdŸ czy w³aœciwoœæ nie jest null ani nie jest pustym ci¹giem znaków
-                if (property.GetValue(filtr) != null && !string.IsNullOrWhiteSpace(property.GetValue(filtr).ToString()))
-                {
-                    // Jeœli chocia¿ jedna w³aœciwoœæ nie jest pusta, zwróæ false
-                    isFiltrFilled = true;
-                }
-                else
-                {
-                   
-                        // Wyprintuj nazwê w³aœciwoœci, która jest null
-                        Console.WriteLine($"W³aœciwoœæ '{property.Name}' ma wartoœæ null");
-                    
-                }
+                isFilterFilled = true;
             }
 
-            if (isFiltrFilled == false)
+            if (isFilterFilled == false)
             {
                 foreach (var item in jobOffers)
                 {
@@ -153,11 +140,11 @@ namespace TWAB.Controllers
                     var user = await _userManager.FindByIdAsync(item.RecruiterId);
                     var lokalizacja = _dbContext.ComanyLocations.FirstOrDefault(x => x.DbuserID == user.Id);
 
-                    if ((filtr.Title == null || item.Title == filtr.Title) &&
-                    (filtr.Category == null || item.Category == filtr.Category) &&
-                    (filtr.WorkingDimension == null || item.WorkDimension == filtr.WorkingDimension) &&
-                    (filtr.ContractType == null || item.ContractType == filtr.ContractType) &&
-                    (filtr.City == null || lokalizacja.City == filtr.City))
+                    if ((filter.Title == null || item.Title.Contains(filter.Title)) &&
+                    (filter.Category == null || item.Category == filter.Category) &&
+                    (filter.WorkingDimension == null || item.WorkDimension == filter.WorkingDimension) &&
+                    (filter.ContractType == null || item.ContractType == filter.ContractType) &&
+                    (filter.City == null || lokalizacja.City == filter.City))
                     {
                         JobOffersUserViewModel tmp = new JobOffersUserViewModel()
                         {
